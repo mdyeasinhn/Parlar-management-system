@@ -2,12 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const { login } = useAuth();
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -15,7 +18,7 @@ const LoginPage = () => {
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
-    console.log({ email, password });
+    await login(email);
     setLoading(false);
   };
 
@@ -127,7 +130,7 @@ const LoginPage = () => {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium text-rose-500 hover:underline">
+          <Link href="/register" className="font-medium text-rose-500 hover:underline">
             Create one
           </Link>
         </p>
