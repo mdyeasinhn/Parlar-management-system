@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -12,6 +13,7 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(null); // Active link tracking
+  const { user, logout } = useAuth();
 
   return (
     <nav className="w-full bg-[#FFF8F6] border-t-4 px-6 py-4 md:px-12 lg:px-24 shadow-sm">
@@ -55,12 +57,21 @@ const Navbar = () => {
             </Link>
           ))}
 
-          <Link href="/login">
-          <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
-            Login
-          </button>
-          </Link>
-          
+          {!user ? (
+            <Link href="/login">
+              <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
+                Login
+              </button>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-3">
+              <img src={user.avatar} alt="avatar" className="h-9 w-9 rounded-full" />
+              <button onClick={logout} className="text-sm text-gray-600 hover:underline">
+                Logout
+              </button>
+            </div>
+          )}
+
         </div>
 
         {/* MOBILE MENU BUTTON */}
@@ -95,9 +106,9 @@ const Navbar = () => {
             </a>
           ))}
           <Link href="/login">
-          <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
-            Login
-          </button>
+            <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
+              Login
+            </button>
           </Link>
         </div>
       )}
