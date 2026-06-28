@@ -1,12 +1,11 @@
+type ServiceDetailPageProps = {
+    params: Promise<{ serviceId: string }>;
+};
 
-const ServiceDetailPage = ({ params}) => {
-    const serviceId = params.serviceId;
-    console.log('serviceId', serviceId);
-    return (
-        <div>
-            servce detail page for serviceId: {serviceId}
-        </div>
-    );
+const ServiceDetailPage = async ({ params }: ServiceDetailPageProps) => {
+    const { serviceId } = await params;
+
+    return <div>service detail page for serviceId: {serviceId}</div>;
 };
 
 export default ServiceDetailPage;
