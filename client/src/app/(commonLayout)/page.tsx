@@ -1,15 +1,17 @@
 import Banner from '@/components/home/Banner';
 import ContactForm from '@/components/home/contact';
-import ServiceSection from '@/components/home/services';
+import Services from '@/components/home/Service';
+import ServiceOverview from '@/components/home/ServiceOverview';
 import Testimonials from '@/components/home/Testimonials';
 
 const HomePage = () => {
   return (
     <div>
       <Banner />
-      <ServiceSection/>
-      <Testimonials/>
-      <ContactForm/>
+      <Services />
+      <ServiceOverview />
+      <Testimonials />
+      <ContactForm />
     </div>
   );
 };
