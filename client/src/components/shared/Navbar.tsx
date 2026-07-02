@@ -11,8 +11,13 @@ const navLinks = [
   { name: 'Our Team', href: '/team' },
   { name: 'Contact Us', href: '/contact' },
 ]
+type Userprops = {
+  name: string | null | undefined;
+  email: string | null | undefined;
+  image: string | null | undefined;
+};
 
-export default function Navbar() {
+export default function Navbar({session } : {session: Userprops | null}) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   
