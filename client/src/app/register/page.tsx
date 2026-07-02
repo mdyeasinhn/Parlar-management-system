@@ -2,11 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 
 const RegisterPage = () => {
     const [loading, setLoading] = useState(false);
-    const { register } = useAuth();
 
     const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -14,7 +12,6 @@ const RegisterPage = () => {
         const form = e.currentTarget;
         const email = (form.elements.namedItem("email") as HTMLInputElement).value;
         const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-        await register(email, name);
         setLoading(false);
     };
 
