@@ -4,13 +4,13 @@ import { authOptions } from '@/utils/authOptions';
 import { getServerSession } from 'next-auth/next';
 import React from 'react';
 
-const CommonLayout = async ({children} : {children: React.ReactNode}) => {
-    const session = await getServerSession(authOptions);
+const CommonLayout = async ({ children }: { children: React.ReactNode }) => {
+    await getServerSession(authOptions);
     return (
         <div>
-        <Navbar session={session}/>
+            <Navbar />
             {children}
-            <Footer/>
+            <Footer />
         </div>
     );
 };

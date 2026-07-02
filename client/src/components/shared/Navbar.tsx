@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { signOut, useSession } from 'next-auth/react'
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -11,34 +12,22 @@ const navLinks = [
   { name: 'Our Team', href: '/team' },
   { name: 'Contact Us', href: '/contact' },
 ]
-type Userprops = {
-  name: string | null | undefined;
-  email: string | null | undefined;
-  image: string | null | undefined;
-};
-
-export default function Navbar({session } : {session: Userprops | null}) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  
-  // Mock user state - replace with your actual auth logic
-  const [user, setUser] = useState(null)
-  // Example user object:
-  // const [user, setUser] = useState({ 
-  //   name: 'John Doe', 
-  //   avatar: '/images/avatar.jpg' 
-  // })
+  const { data: session } = useSession()
+  const user = session?.user
+  const isAuthenticated = Boolean(user)
 
-  const logout = () => {
-    setUser(null)
-    // Add your logout logic here
+  const logout = async () => {
+    await signOut({ callbackUrl: '/' })
   }
 
   return (
     <nav className="bg-[#FFF5F1] shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
-          
+
           {/* LOGO SECTION */}
           <div className="flex items-center space-x-3 cursor-pointer">
             <svg
@@ -70,15 +59,14 @@ export default function Navbar({session } : {session: Userprops | null}) {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-sm font-medium px-2 py-1 rounded hover:bg-orange-50 transition-colors ${
-                  pathname === link.href ? 'text-[#F63E7B]' : 'text-[#4A4A4A]'
-                }`}
+                className={`text-sm font-medium px-2 py-1 rounded hover:bg-orange-50 transition-colors ${pathname === link.href ? 'text-[#F63E7B]' : 'text-[#4A4A4A]'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
 
-            {!user ? (
+            {!isAuthenticated ? (
               <Link href="/login">
                 <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
                   Login
@@ -87,12 +75,12 @@ export default function Navbar({session } : {session: Userprops | null}) {
             ) : (
               <div className="flex items-center gap-3">
                 <div className="relative h-9 w-9 rounded-full overflow-hidden">
-                  <Image 
-                    src={user.avatar} 
-                    alt="avatar" 
+                  <Image
+                    src={user?.image ?? '/images/avatar.jpg'}
+                    alt="avatar"
                     fill
                     sizes="36px"
-                    className="object-cover" 
+                    className="object-cover"
                   />
                 </div>
                 <button onClick={logout} className="text-sm text-gray-600 hover:underline">
@@ -127,18 +115,23 @@ export default function Navbar({session } : {session: Userprops | null}) {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-sm font-medium px-2 py-1 rounded hover:bg-orange-50 transition-colors ${
-                  pathname === link.href ? 'text-[#F63E7B]' : 'text-[#4A4A4A]'
-                }`}
+                className={`text-sm font-medium px-2 py-1 rounded hover:bg-orange-50 transition-colors ${pathname === link.href ? 'text-[#F63E7B]' : 'text-[#4A4A4A]'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
-            <Link href="/login">
-              <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
-                Login
+            {!isAuthenticated ? (
+              <Link href="/login">
+                <button className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
+                  Login
+                </button>
+              </Link>
+            ) : (
+              <button onClick={logout} className="bg-[#F63E7B] text-white px-9 py-2.5 rounded-lg font-medium text-sm hover:bg-[#e0306c] transition-all transform active:scale-95 shadow-sm">
+                Logout
               </button>
-            </Link>
+            )}
           </div>
         )}
       </div>
