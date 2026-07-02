@@ -1,17 +1,18 @@
-
 "use client";
-import { useAuth } from "@/context/AuthContext";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
-    const { user } = useAuth();
+    const { data: session } = useSession();
+    const user = session?.user;
 
     return (
         <aside className="h-screen w-64 bg-white border-r px-4 py-6">
             <div className="flex items-center gap-3 mb-8">
                 {user ? (
                     <>
-                        <img src={user.avatar} alt="avatar" className="h-10 w-10 rounded-full" />
+                        <img src={user.image ?? '/images/avatar.jpg'} alt="avatar" className="h-10 w-10 rounded-full object-cover" />
                         <div>
                             <div className="text-sm font-medium">{user.name}</div>
                             <div className="text-xs text-gray-500">{user.email}</div>
