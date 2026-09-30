@@ -33,6 +33,7 @@ No root workspace config. Each package has its own `package.json`, `tsconfig.jso
 - `npm run lint:fix` — auto-fix
 - `npm run format` — Prettier (write mode)
 
+
 ### Key details
 - Entrypoint: `src/server.ts` -> connects to MongoDB, starts Express on `PORT` (default 5000)
 - App setup: `src/app.ts` — CORS, cookie-parser, JSON parser, routes at `/api`
@@ -46,6 +47,7 @@ No root workspace config. Each package has its own `package.json`, `tsconfig.jso
 - Docker: `Dockerfile` (Node 20, exposes 5000, runs `npm run dev`)
 
 ## General
+
 
 - No shared tooling between client and server — each is fully independent
 - No root-level `package.json`, `tsconfig.json`, or lint config
