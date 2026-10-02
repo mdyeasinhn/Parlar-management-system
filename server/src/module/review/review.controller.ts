@@ -6,11 +6,14 @@ import { StatusCodes } from "http-status-codes";
 
 // Create a review 
 const createReview = catchAsync(async (req: Request, res: Response) => {
-    const user = req.user.id;
+    const user = req.user;
+    if (!user) {
+        throw new Error('User not found');
+    }
     const { service, rating, comment } = req.body;
 
     const result = await reviewService.createReview({
-        user,
+        user: user._id,
         service,
         rating,
         comment,
