@@ -1,10 +1,39 @@
 import AppError from "../../error/appError";
 import User from "../user/user.model";
-import { TLoginUser } from "./auth.interface";
+import { TLoginUser, TRegisterUser } from "./auth.interface";
 import httpStatus from "http-status-codes";
 import config from "../../config";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from 'jsonwebtoken'
+
+const registerUser = async (payload: TRegisterUser) => {
+  const existingUser = await User.findOne({ email: payload.email });
+  if (existingUser) {
+    throw new AppError(httpStatus.CONFLICT, "User already exists with this email!");
+  }
+
+  const user = await User.create(payload);
+
+  const token = jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    },
+    config.jwt_access_secret as string,
+    {
+      expiresIn: config.jwt_expires_in as jwt.SignOptions['expiresIn'],
+    }
+  );
+
+  const verifiedUser = {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  return { token, verifiedUser };
+};
 
 const loginUser = async (payload: TLoginUser) => {
   // 1. Find user by email and include password
@@ -25,8 +54,8 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.UNAUTHORIZED, "Invalid credentials!");
   }
 
-  // 4. Generate JWT token using the utility function
- const token = jwt.sign(
+// 4. Generate JWT token using the utility function
+  const token = jwt.sign(
     {
       id: user?._id,
       email: user?.email,
@@ -34,7 +63,7 @@ const loginUser = async (payload: TLoginUser) => {
     },
     config.jwt_access_secret as string,
     {
-      expiresIn: '30d',
+      expiresIn: config.jwt_expires_in as jwt.SignOptions['expiresIn'],
     }
   )
 
@@ -87,6 +116,7 @@ return null;
 };
 
 export const authServices = {
+  registerUser,
   loginUser,
   changePassword
 };

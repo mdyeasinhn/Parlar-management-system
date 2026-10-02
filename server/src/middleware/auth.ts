@@ -3,6 +3,14 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import catchAsync from '../utils/catchAsync';
 import config from '../config';
 import User from '../module/user/user.model';
+import { TUser } from '../module/user/user.interface';
+
+// Extend Express Request type globally
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: TUser;
+  }
+}
 
 const auth = (...requiredRoles: string[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
